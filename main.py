@@ -14,7 +14,7 @@ def main():
     pygame.init()
     window = pygame.display.set_mode((1000, 400))
     font = pygame.font.Font(None,90)
-    back = pygame.image.load("Back.png").convert()
+    back = pygame.image.load("back.png").convert()
     pngJack = pygame.image.load("Jack.png").convert()
     rock = pygame.image.load("Rock.png").convert()
 
@@ -22,6 +22,7 @@ def main():
 
     jump = 0
     clock = pygame.time.Clock()
+    space = 0
 
     elements = []
     jack = Jack()
@@ -37,6 +38,13 @@ def main():
             if event.type == KEYDOWN and event.key == K_SPACE and jump == 0:
 
                 jump = 1
+                space = 1 #la touche espace est activée
+
+            if event.type == KEYUP and event.key == K_SPACE:
+                space = 0
+
+        if jump == 0 and space == 1:
+            jump = 1
 
         clock.tick(fps)
 
