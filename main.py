@@ -9,14 +9,13 @@ import math
 
 def main():
 
+    pygame.init()
+
     fps = 40
 
-    pygame.init()
     window = pygame.display.set_mode((1000, 400))
     font = pygame.font.Font(None,90)
-    back = pygame.image.load("back.png").convert()
-    pngJack = pygame.image.load("Jack.png").convert()
-    rock = pygame.image.load("Rock.png").convert()
+    back = pygame.image.load("Back.png").convert()
 
     game = 1
 
@@ -24,8 +23,8 @@ def main():
     clock = pygame.time.Clock()
     space = 0
 
-    elements = []
-    jack = Jack()
+    elements = pygame.sprite.Group()
+    jack = pygame.sprite.GroupSingle(Jack())
 
     while game:
 
@@ -35,7 +34,7 @@ def main():
 
                 game = 0
 
-            if event.type == KEYDOWN and event.key == K_SPACE and jump == 0:
+            if event.type == KEYDOWN and event.key == K_SPACE :
 
                 jump = 1
                 space = 1 #la touche espace est activée
@@ -50,40 +49,24 @@ def main():
 
         if add_rock():
 
-            elements.append(Element())
+            elements.add(Element())
 
         window.blit(back, (0,0))
 
-        for el in elements:
+        elements.update()
 
-            if el.pos >= 100 and el.pos <= 150 and jack.pos >= 250:
+        elements.draw(window)
 
-                game = 0
-
-
-            el.move()
-
-            window.blit(rock, (el.pos,350))
-
-            if el.pos < 0:
-
-                elements.remove(el)
-                del el
+        print space
 
 
-
-        if jump != 0 and jump < 40 :
-
-            jump += 1
-
-            jack.jump(jump,fps)
-
-        else:
-
-            jump = 0
+        if len(pygame.sprite.groupcollide(elements,jack,0,0)) != 0:
+            print "perdu"
+            game = 0
 
 
-        window.blit(pngJack, (100,jack.pos))
+        jack.update(space)
+        jack.draw(window)
 
 
         pygame.display.flip()
@@ -100,6 +83,20 @@ def add_rock():
     else:
 
         return 0
+
+def load_png(name):
+    """ Load image and return image object"""
+    fullname = os.path.join('data', name)
+    try:
+        image = pygame.image.load(fullname)
+        if image.get_alpha is None:
+            image = image.convert()
+        else:
+            image = image.convert_alpha()
+    except pygame.error, message:
+        print 'Cannot load image:', fullname
+        raise SystemExit, message
+    return image, image.get_rect()
 
 
 
