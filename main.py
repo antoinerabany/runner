@@ -36,14 +36,10 @@ def main():
 
             if event.type == KEYDOWN and event.key == K_SPACE :
 
-                jump = 1
                 space = 1 #la touche espace est activée
 
             if event.type == KEYUP and event.key == K_SPACE:
                 space = 0
-
-        if jump == 0 and space == 1:
-            jump = 1
 
         clock.tick(fps)
 

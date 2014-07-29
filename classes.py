@@ -24,6 +24,8 @@ class Element(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.kill()
 
+        self.speed += 0.01
+
 class Jack(pygame.sprite.Sprite):
 
     default_pos = 219
@@ -32,6 +34,8 @@ class Jack(pygame.sprite.Sprite):
     def __init__(self):
 
         pygame.sprite.Sprite.__init__(self)
+
+        self.rect_jump = pygame.Rect((500,0),(100,100))
 
         self.rect_sheet= pygame.Rect((0,0),(100,100))
         self.sheet = pygame.image.load("Sprites/Jack.png").convert_alpha()
@@ -44,9 +48,6 @@ class Jack(pygame.sprite.Sprite):
 
         self.jump = 0
 
-    def jump(self,f,fps):
-        self.pos = self.default_pos - math.sin((math.pi*f)/fps)*self.default_pos
-
     def update(self,space,fps=40):
 
         self.count += 0.375
@@ -57,8 +58,16 @@ class Jack(pygame.sprite.Sprite):
 
         self.rect_sheet.left = int(self.count)*100
 
-        self.sheet.set_clip(self.rect_sheet)
-        self.image = self.sheet.subsurface(self.sheet.get_clip())
+        if self.jump == 0:
+
+            self.sheet.set_clip(self.rect_sheet)
+            self.image = self.sheet.subsurface(self.sheet.get_clip())
+
+        else:
+
+            self.sheet.set_clip(self.rect_jump)
+            self.image = self.sheet.subsurface(self.sheet.get_clip())
+
 
         if space == 1 and self.jump == 0:
             self.jump = 1
