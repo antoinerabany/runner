@@ -1,6 +1,8 @@
 
 import math
 
+import cPickle as pickle
+
 import pygame
 from pygame.locals import *
 
@@ -48,7 +50,7 @@ class Jack(pygame.sprite.Sprite):
 
         self.jump = 0
 
-    def update(self,space,fps=40):
+    def update(self,space,fps):
 
         self.count += 0.375
 
@@ -101,4 +103,36 @@ class Jack(pygame.sprite.Sprite):
 
 
         #self.pos = 300 - math.sin((math.pi*(self.pos/300))/fps)*300
+
+class Score():
+
+    def __init__(self):
+
+        self.score = 0
+
+        self.best_score = pickle.load( open( "save.p", "rb" ) )
+
+    def __str__(self):
+
+        return 'Score : ' + str(self.score)
+
+    def update(self):
+
+        self.score += 1
+
+    def save(self):
+
+        if self.score > self.best_score:
+
+            self.best_score = self.score
+
+            pickle.dump(self.score,open( "save.p", "wb" ))
+
+    def clear(self):
+
+        self.score = 0
+
+
+
+
 
